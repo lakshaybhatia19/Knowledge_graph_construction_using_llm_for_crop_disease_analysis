@@ -1,0 +1,2364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Crop Disease Analysis | Knowledge Graph + LLM
+    </title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #f6faf7;
+            color: #1f2937;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            height: 72px;
+            background: #063b2c;
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 6%;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 999;
+
+            box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            font-size: 30px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #86efac;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 590px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 80px 8%;
+
+            background:
+                linear-gradient(
+                    125deg,
+                    #064e3b,
+                    #15803d
+                );
+
+            color: white;
+        }
+
+        .hero-content {
+            width: 58%;
+        }
+
+        .badge {
+            display: inline-block;
+
+            padding: 8px 15px;
+
+            border-radius: 30px;
+
+            background: rgba(255,255,255,0.14);
+
+            border: 1px solid rgba(255,255,255,0.25);
+
+            font-size: 14px;
+
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            line-height: 1.1;
+
+            margin-bottom: 22px;
+        }
+
+        .hero h1 span {
+            color: #bbf7d0;
+        }
+
+        .hero p {
+            font-size: 18px;
+            line-height: 1.8;
+
+            max-width: 750px;
+
+            color: #ecfdf5;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 14px 25px;
+
+            border-radius: 10px;
+
+            border: none;
+
+            font-size: 15px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #166534;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-green {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-green:hover {
+            background: #15803d;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: #166534;
+        }
+
+        .hero-visual {
+            width: 35%;
+
+            display: flex;
+            justify-content: center;
+        }
+
+        .plant-circle {
+            width: 320px;
+            height: 320px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 150px;
+
+            background: rgba(255,255,255,0.12);
+
+            border: 1px solid rgba(255,255,255,0.25);
+
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.25);
+
+            backdrop-filter: blur(10px);
+        }
+
+        /* ================= GENERAL ================= */
+
+        section {
+            padding: 85px 8%;
+        }
+
+        .section-header {
+            text-align: center;
+
+            max-width: 850px;
+
+            margin: 0 auto 50px;
+        }
+
+        .section-header h2 {
+            color: #14532d;
+
+            font-size: 36px;
+
+            margin-bottom: 12px;
+        }
+
+        .section-header p {
+            color: #6b7280;
+
+            font-size: 16px;
+
+            line-height: 1.7;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 20px;
+
+            padding: 0 8%;
+
+            margin-top: -45px;
+
+            position: relative;
+        }
+
+        .stat-card {
+            background: white;
+
+            padding: 28px 20px;
+
+            border-radius: 17px;
+
+            text-align: center;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .stat-icon {
+            font-size: 38px;
+
+            margin-bottom: 10px;
+        }
+
+        .stat-card h3 {
+            color: #166534;
+
+            margin-bottom: 7px;
+        }
+
+        .stat-card p {
+            color: #6b7280;
+
+            font-size: 14px;
+        }
+
+        /* ================= ABOUT PROJECT ================= */
+
+        .about-grid {
+            display: grid;
+
+            grid-template-columns:
+                1.2fr 0.8fr;
+
+            gap: 30px;
+
+            max-width: 1150px;
+
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 7px 25px rgba(0,0,0,0.06);
+
+            border: 1px solid #e5e7eb;
+        }
+
+        .card h3 {
+            color: #166534;
+
+            margin-bottom: 15px;
+
+            font-size: 22px;
+        }
+
+        .card p {
+            color: #4b5563;
+
+            line-height: 1.8;
+        }
+
+        .dataset-list {
+            list-style: none;
+        }
+
+        .dataset-list li {
+            padding: 10px 0;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            color: #4b5563;
+        }
+
+        .dataset-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* ================= WORKFLOW ================= */
+
+        .workflow-section {
+            background: #ecfdf5;
+        }
+
+        .workflow {
+            max-width: 1150px;
+
+            margin: auto;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 12px;
+        }
+
+        .workflow-step {
+            background: white;
+
+            width: 175px;
+
+            min-height: 145px;
+
+            padding: 20px;
+
+            border-radius: 16px;
+
+            text-align: center;
+
+            box-shadow:
+                0 6px 20px rgba(0,0,0,0.07);
+
+            border: 1px solid #d1fae5;
+        }
+
+        .workflow-step .icon {
+            font-size: 38px;
+
+            margin-bottom: 10px;
+        }
+
+        .workflow-step h4 {
+            color: #166534;
+
+            margin-bottom: 7px;
+        }
+
+        .workflow-step p {
+            font-size: 13px;
+
+            color: #6b7280;
+        }
+
+        .workflow-arrow {
+            color: #16a34a;
+
+            font-size: 28px;
+
+            font-weight: bold;
+        }
+
+        /* ================= PREDICTION ================= */
+
+        .prediction-section {
+            background: #f8faf9;
+        }
+
+        .prediction-grid {
+            max-width: 1150px;
+
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 30px;
+        }
+
+        .upload-card,
+        .prediction-card {
+            background: white;
+
+            padding: 32px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 7px 25px rgba(0,0,0,0.07);
+        }
+
+        .upload-card h3,
+        .prediction-card h3 {
+            color: #14532d;
+
+            margin-bottom: 22px;
+
+            font-size: 22px;
+        }
+
+        .upload-box {
+            min-height: 310px;
+
+            border: 2px dashed #86efac;
+
+            background: #f0fdf4;
+
+            border-radius: 16px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 25px;
+
+            text-align: center;
+        }
+
+        .upload-icon {
+            font-size: 60px;
+
+            margin-bottom: 15px;
+        }
+
+        .upload-box p {
+            color: #6b7280;
+
+            margin-bottom: 15px;
+        }
+
+        #imageInput {
+            max-width: 100%;
+        }
+
+        #preview {
+            display: none;
+
+            max-width: 100%;
+
+            max-height: 240px;
+
+            border-radius: 14px;
+
+            margin-bottom: 15px;
+        }
+
+        .analyze-btn {
+            width: 100%;
+
+            margin-top: 20px;
+        }
+
+        .empty-result {
+            min-height: 310px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            color: #9ca3af;
+        }
+
+        .empty-result-icon {
+            font-size: 65px;
+
+            margin-bottom: 15px;
+        }
+
+        .result-box {
+            display: none;
+
+            background: #ecfdf5;
+
+            border-left: 6px solid #16a34a;
+
+            border-radius: 14px;
+
+            padding: 25px;
+        }
+
+        .result-label {
+            color: #6b7280;
+
+            font-size: 14px;
+        }
+
+        .disease-name {
+            color: #166534;
+
+            font-size: 28px;
+
+            font-weight: 700;
+
+            margin: 8px 0 18px;
+        }
+
+        .confidence-text {
+            margin-bottom: 8px;
+        }
+
+        .progress {
+            width: 100%;
+
+            height: 10px;
+
+            background: #d1fae5;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+
+            width: 96%;
+
+            background: #16a34a;
+        }
+
+        .status {
+            margin-top: 18px;
+
+            padding: 10px 14px;
+
+            display: inline-block;
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            border-radius: 20px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+        /* ================= DISEASE DETAILS ================= */
+
+        .details-grid {
+            max-width: 1150px;
+
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 25px;
+        }
+
+        .detail-card {
+            background: white;
+
+            padding: 28px;
+
+            border-radius: 17px;
+
+            box-shadow:
+                0 6px 22px rgba(0,0,0,0.06);
+
+            border-top: 4px solid #16a34a;
+        }
+
+        .detail-card h3 {
+            color: #166534;
+
+            margin-bottom: 15px;
+        }
+
+        .detail-card p,
+        .detail-card li {
+            color: #4b5563;
+
+            line-height: 1.7;
+        }
+
+        .detail-card ul {
+            padding-left: 20px;
+        }
+
+        /* ================= KNOWLEDGE GRAPH ================= */
+
+        .graph-section {
+            background: #ecfdf5;
+        }
+
+        .graph-container {
+            max-width: 1200px;
+
+            margin: auto;
+
+            background: white;
+
+            padding: 40px;
+
+            border-radius: 22px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.07);
+        }
+
+        .graph-title {
+            text-align: center;
+
+            color: #14532d;
+
+            margin-bottom: 35px;
+        }
+
+        .graph {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 15px;
+        }
+
+        .node {
+            width: 155px;
+
+            min-height: 115px;
+
+            border-radius: 17px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-direction: column;
+
+            text-align: center;
+
+            padding: 15px;
+
+            font-weight: 600;
+
+            box-shadow:
+                0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .node-icon {
+            font-size: 35px;
+
+            margin-bottom: 8px;
+        }
+
+        .crop-node {
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+        .disease-node {
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+        .symptom-node {
+            background: #fef3c7;
+
+            color: #92400e;
+        }
+
+        .cause-node {
+            background: #dbeafe;
+
+            color: #1e40af;
+        }
+
+        .treatment-node {
+            background: #ede9fe;
+
+            color: #5b21b6;
+        }
+
+        .graph-arrow {
+            font-size: 28px;
+
+            color: #16a34a;
+
+            font-weight: bold;
+        }
+
+        .neo4j-box {
+            margin-top: 35px;
+
+            padding: 20px;
+
+            text-align: center;
+
+            background: #f0fdf4;
+
+            border: 1px solid #bbf7d0;
+
+            border-radius: 13px;
+        }
+
+        /* ================= LLM ================= */
+
+        .llm-section {
+            background: #f8faf9;
+        }
+
+        .llm-container {
+            max-width: 1100px;
+
+            margin: auto;
+        }
+
+        .llm-card {
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 7px 25px rgba(0,0,0,0.07);
+        }
+
+        .llm-header {
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+        }
+
+        .llm-icon {
+            font-size: 45px;
+        }
+
+        .llm-header h3 {
+            color: #14532d;
+
+            font-size: 25px;
+        }
+
+        .llm-response {
+            background: #f0fdf4;
+
+            border-left: 5px solid #16a34a;
+
+            padding: 25px;
+
+            border-radius: 13px;
+        }
+
+        .llm-response h4 {
+            color: #166534;
+
+            margin-bottom: 10px;
+
+            margin-top: 15px;
+        }
+
+        .llm-response h4:first-child {
+            margin-top: 0;
+        }
+
+        .llm-response p {
+            color: #4b5563;
+
+            line-height: 1.8;
+        }
+
+        /* ================= TECHNOLOGY ================= */
+
+        .tech-grid {
+            max-width: 1100px;
+
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 20px;
+        }
+
+        .tech-card {
+            background: white;
+
+            padding: 25px 15px;
+
+            text-align: center;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 6px 20px rgba(0,0,0,0.06);
+        }
+
+        .tech-icon {
+            font-size: 38px;
+
+            margin-bottom: 10px;
+        }
+
+        .tech-card h4 {
+            color: #166534;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #022c22;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 45px 8%;
+        }
+
+        footer h3 {
+            font-size: 24px;
+
+            margin-bottom: 12px;
+        }
+
+        footer p {
+            color: #a7f3d0;
+
+            margin-top: 8px;
+
+            line-height: 1.6;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1000px) {
+
+            .hero {
+                flex-direction: column;
+
+                text-align: center;
+            }
+
+            .hero-content {
+                width: 100%;
+            }
+
+            .hero-visual {
+                width: 100%;
+
+                margin-top: 50px;
+            }
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .prediction-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-grid {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 60px 5%;
+            }
+
+            .hero {
+                padding: 65px 5%;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+
+                flex-wrap: wrap;
+            }
+
+            .plant-circle {
+                width: 230px;
+                height: 230px;
+
+                font-size: 100px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+
+                padding: 0 5%;
+
+                margin-top: 20px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .graph {
+                flex-direction: column;
+            }
+
+            .graph-arrow {
+                transform: rotate(90deg);
+            }
+
+            .graph-container {
+                padding: 25px 15px;
+            }
+
+        }
+
+        @media (max-width: 450px) {
+
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <span class="logo-icon">🌱</span>
+
+        <span>Crop Disease AI</span>
+
+    </div>
+
+
+    <ul class="nav-links">
+
+        <li>
+            <a href="#home">Home</a>
+        </li>
+
+        <li>
+            <a href="#prediction">Prediction</a>
+        </li>
+
+        <li>
+            <a href="#details">Disease Details</a>
+        </li>
+
+        <li>
+            <a href="#graph">Knowledge Graph</a>
+        </li>
+
+        <li>
+            <a href="#llm">LLM Analysis</a>
+        </li>
+
+        <li>
+            <a href="#about">About</a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero" id="home">
+
+    <div class="hero-content">
+
+        <div class="badge">
+            🌿 PlantVillage Dataset Based Project
+        </div>
+
+        <h1>
+
+            Knowledge Graph Construction
+
+            <span>
+                Using Large Language Models
+            </span>
+
+        </h1>
+
+        <p>
+
+            An intelligent crop disease analysis system that
+            combines deep learning, the PlantVillage dataset,
+            knowledge graphs and large language models to provide
+            meaningful crop disease information.
+
+        </p>
+
+
+        <div class="hero-buttons">
+
+            <a href="#prediction">
+
+                <button class="btn btn-primary">
+
+                    🔬 Start Disease Analysis
+
+                </button>
+
+            </a>
+
+
+            <a href="#graph">
+
+                <button class="btn btn-outline">
+
+                    🕸️ Explore Knowledge Graph
+
+                </button>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="hero-visual">
+
+        <div class="plant-circle">
+
+            🌿
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= STATS ================= -->
+
+<div class="stats">
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+            🌱
+        </div>
+
+        <h3>
+            PlantVillage
+        </h3>
+
+        <p>
+            Dataset
+        </p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+            🧠
+        </div>
+
+        <h3>
+            Deep Learning
+        </h3>
+
+        <p>
+            Disease Prediction
+        </p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+            🕸️
+        </div>
+
+        <h3>
+            Knowledge Graph
+        </h3>
+
+        <p>
+            Disease Relationships
+        </p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+            🤖
+        </div>
+
+        <h3>
+            Large Language Model
+        </h3>
+
+        <p>
+            Intelligent Analysis
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= ABOUT PROJECT ================= -->
+
+<section id="about">
+
+    <div class="section-header">
+
+        <h2>
+            About The Project
+        </h2>
+
+        <p>
+
+            Our system aims to combine image-based crop disease
+            detection with structured knowledge representation and
+            LLM-based analysis.
+
+        </p>
+
+    </div>
+
+
+    <div class="about-grid">
+
+
+        <div class="card">
+
+            <h3>
+                🎯 Project Objective
+            </h3>
+
+            <p>
+
+                The objective of this project is to develop an
+                intelligent crop disease analysis system using the
+                PlantVillage dataset. A deep learning model can be
+                used to identify crop diseases from leaf images.
+                The identified disease information can then be
+                represented through a knowledge graph and analyzed
+                using a Large Language Model.
+
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                🌿 PlantVillage Dataset
+            </h3>
+
+            <ul class="dataset-list">
+
+                <li>
+                    📷 Crop leaf images
+                </li>
+
+                <li>
+                    🌱 Multiple crop categories
+                </li>
+
+                <li>
+                    🦠 Healthy and diseased leaves
+                </li>
+
+                <li>
+                    🧠 Used for disease classification
+                </li>
+
+                <li>
+                    🔗 Disease information can support graph construction
+                </li>
+
+            </ul>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- ================= WORKFLOW ================= -->
+
+<section class="workflow-section">
+
+    <div class="section-header">
+
+        <h2>
+            🔄 System Workflow
+        </h2>
+
+        <p>
+
+            The proposed system follows a pipeline from crop image
+            analysis to knowledge-based LLM explanation.
+
+        </p>
+
+    </div>
+
+
+    <div class="workflow">
+
+
+        <div class="workflow-step">
+
+            <div class="icon">
+                📷
+            </div>
+
+            <h4>
+                Leaf Image
+            </h4>
+
+            <p>
+                Upload crop leaf image
+            </p>
+
+        </div>
+
+
+        <div class="workflow-arrow">
+            →
+        </div>
+
+
+        <div class="workflow-step">
+
+            <div class="icon">
+                🧠
+            </div>
+
+            <h4>
+                Deep Learning
+            </h4>
+
+            <p>
+                Disease classification
+            </p>
+
+        </div>
+
+
+        <div class="workflow-arrow">
+            →
+        </div>
+
+
+        <div class="workflow-step">
+
+            <div class="icon">
+                🦠
+            </div>
+
+            <h4>
+                Disease
+            </h4>
+
+            <p>
+                Identify disease
+            </p>
+
+        </div>
+
+
+        <div class="workflow-arrow">
+            →
+        </div>
+
+
+        <div class="workflow-step">
+
+            <div class="icon">
+                🕸️
+            </div>
+
+            <h4>
+                Knowledge Graph
+            </h4>
+
+            <p>
+                Connect entities
+            </p>
+
+        </div>
+
+
+        <div class="workflow-arrow">
+            →
+        </div>
+
+
+        <div class="workflow-step">
+
+            <div class="icon">
+                🤖
+            </div>
+
+            <h4>
+                LLM
+            </h4>
+
+            <p>
+                Generate analysis
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- ================= PREDICTION ================= -->
+
+<section class="prediction-section" id="prediction">
+
+    <div class="section-header">
+
+        <h2>
+            🔬 Crop Disease Prediction
+        </h2>
+
+        <p>
+
+            Upload a crop leaf image to start the disease analysis.
+
+        </p>
+
+    </div>
+
+
+    <div class="prediction-grid">
+
+
+        <!-- UPLOAD CARD -->
+
+        <div class="upload-card">
+
+            <h3>
+                📤 Upload Crop Leaf
+            </h3>
+
+
+            <div class="upload-box">
+
+                <div
+                    id="uploadIcon"
+                    class="upload-icon"
+                >
+                    📷
+                </div>
+
+
+                <img
+                    id="preview"
+                    alt="Uploaded Crop Leaf"
+                >
+
+
+                <p>
+                    Upload JPG, JPEG or PNG image
+                </p>
+
+
+                <input
+                    type="file"
+                    id="imageInput"
+                    accept=".jpg,.jpeg,.png"
+                >
+
+            </div>
+
+
+            <button
+                class="btn btn-green analyze-btn"
+                onclick="analyzeImage()"
+            >
+
+                🔍 Analyze Disease
+
+            </button>
+
+        </div>
+
+
+        <!-- RESULT CARD -->
+
+        <div class="prediction-card">
+
+            <h3>
+                🧠 Prediction Result
+            </h3>
+
+
+            <div
+                id="emptyResult"
+                class="empty-result"
+            >
+
+                <div class="empty-result-icon">
+                    🌿
+                </div>
+
+                <p>
+                    Upload an image and click
+                    <b>Analyze Disease</b>
+                    to view the prediction.
+                </p>
+
+            </div>
+
+
+            <div
+                id="resultBox"
+                class="result-box"
+            >
+
+                <div class="result-label">
+                    Predicted Disease
+                </div>
+
+
+                <div class="disease-name">
+                    Tomato Late Blight
+                </div>
+
+
+                <div class="confidence-text">
+
+                    Confidence:
+                    <b>96.42%</b>
+
+                </div>
+
+
+                <div class="progress">
+
+                    <div class="progress-bar"></div>
+
+                </div>
+
+
+                <div class="status">
+                    Diseased
+                </div>
+
+
+                <br>
+                <br>
+
+
+                <p>
+
+                    The disease information will be
+                    retrieved from the knowledge graph
+                    in the final implementation.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- ================= DISEASE DETAILS ================= -->
+
+<section id="details">
+
+    <div class="section-header">
+
+        <h2>
+            📋 Crop Disease Information
+        </h2>
+
+        <p>
+            Example information displayed after disease identification.
+        </p>
+
+    </div>
+
+
+    <div class="details-grid">
+
+
+        <div class="detail-card">
+
+            <h3>
+                🌿 Crop
+            </h3>
+
+            <p>
+                <b>Tomato</b>
+            </p>
+
+            <br>
+
+            <p>
+                The detected disease in this example
+                is associated with tomato plants.
+            </p>
+
+        </div>
+
+
+        <div class="detail-card">
+
+            <h3>
+                🦠 Disease
+            </h3>
+
+            <p>
+
+                <b>Tomato Late Blight</b>
+
+            </p>
+
+            <br>
+
+            <p>
+
+                A disease that can affect tomato
+                leaves, stems and fruits.
+
+            </p>
+
+        </div>
+
+
+        <div class="detail-card">
+
+            <h3>
+                ⚠️ Symptoms
+            </h3>
+
+            <ul>
+
+                <li>
+                    Dark spots on leaves
+                </li>
+
+                <li>
+                    Leaf discoloration
+                </li>
+
+                <li>
+                    Rapid leaf damage
+                </li>
+
+                <li>
+                    Fruit lesions
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <div class="detail-card">
+
+            <h3>
+                🔬 Possible Causes
+            </h3>
+
+            <ul>
+
+                <li>
+                    Pathogen infection
+                </li>
+
+                <li>
+                    High humidity
+                </li>
+
+                <li>
+                    Wet environmental conditions
+                </li>
+
+                <li>
+                    Poor air circulation
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <div class="detail-card">
+
+            <h3>
+                🛡️ Prevention
+            </h3>
+
+            <ul>
+
+                <li>
+                    Monitor plants regularly
+                </li>
+
+                <li>
+                    Maintain suitable spacing
+                </li>
+
+                <li>
+                    Avoid excessive moisture
+                </li>
+
+                <li>
+                    Remove severely infected material
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <div class="detail-card">
+
+            <h3>
+                💊 Treatment / Management
+            </h3>
+
+            <ul>
+
+                <li>
+                    Remove infected parts
+                </li>
+
+                <li>
+                    Improve air circulation
+                </li>
+
+                <li>
+                    Follow suitable disease management
+                </li>
+
+                <li>
+                    Follow agricultural recommendations
+                </li>
+
+            </ul>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- ================= KNOWLEDGE GRAPH ================= -->
+
+<section class="graph-section" id="graph">
+
+    <div class="section-header">
+
+        <h2>
+            🕸️ Knowledge Graph
+        </h2>
+
+        <p>
+
+            The knowledge graph connects crop disease entities
+            and their relationships.
+
+        </p>
+
+    </div>
+
+
+    <div class="graph-container">
+
+
+        <h2 class="graph-title">
+            Crop Disease Knowledge Graph
+        </h2>
+
+
+        <div class="graph">
+
+
+            <div class="node crop-node">
+
+                <div class="node-icon">
+                    🌱
+                </div>
+
+                <span>
+                    Crop
+                </span>
+
+                <small>
+                    Tomato
+                </small>
+
+            </div>
+
+
+            <div class="graph-arrow">
+                →
+            </div>
+
+
+            <div class="node disease-node">
+
+                <div class="node-icon">
+                    🦠
+                </div>
+
+                <span>
+                    Disease
+                </span>
+
+                <small>
+                    Late Blight
+                </small>
+
+            </div>
+
+
+            <div class="graph-arrow">
+                →
+            </div>
+
+
+            <div class="node symptom-node">
+
+                <div class="node-icon">
+                    ⚠️
+                </div>
+
+                <span>
+                    Symptoms
+                </span>
+
+                <small>
+                    Leaf Spots
+                </small>
+
+            </div>
+
+
+            <div class="graph-arrow">
+                →
+            </div>
+
+
+            <div class="node cause-node">
+
+                <div class="node-icon">
+                    🔬
+                </div>
+
+                <span>
+                    Cause
+                </span>
+
+                <small>
+                    Pathogen
+                </small>
+
+            </div>
+
+
+            <div class="graph-arrow">
+                →
+            </div>
+
+
+            <div class="node treatment-node">
+
+                <div class="node-icon">
+                    💊
+                </div>
+
+                <span>
+                    Treatment
+                </span>
+
+                <small>
+                    Management
+                </small>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="neo4j-box">
+
+            <h3>
+                🗄️ Neo4j Integration
+            </h3>
+
+            <p>
+
+                This frontend is prepared for integration
+                with the actual Neo4j knowledge graph.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= LLM ANALYSIS ================= -->
+
+<section class="llm-section" id="llm">
+
+    <div class="section-header">
+
+        <h2>
+            🤖 LLM Based Crop Disease Analysis
+        </h2>
+
+        <p>
+
+            Large Language Models can use structured knowledge
+            to generate understandable disease analysis.
+
+        </p>
+
+    </div>
+
+
+    <div class="llm-container">
+
+
+        <div class="llm-card">
+
+
+            <div class="llm-header">
+
+                <div class="llm-icon">
+                    🤖
+                </div>
+
+                <div>
+
+                    <h3>
+                        AI Generated Analysis
+                    </h3>
+
+                    <p>
+                        Knowledge Graph + Large Language Model
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="llm-response">
+
+
+                <h4>
+                    🌿 Disease Explanation
+                </h4>
+
+                <p>
+
+                    The predicted disease is associated with
+                    the selected crop. The knowledge graph can
+                    provide related symptoms, causes and
+                    treatment information.
+
+                </p>
+
+
+                <h4>
+                    ⚠️ Symptoms
+                </h4>
+
+                <p>
+
+                    The system can retrieve symptoms connected
+                    to the predicted disease from the knowledge graph.
+
+                </p>
+
+
+                <h4>
+                    🛡️ Prevention
+                </h4>
+
+                <p>
+
+                    The LLM can summarize prevention and
+                    management information in simple language.
+
+                </p>
+
+
+                <h4>
+                    💡 Recommendation
+                </h4>
+
+                <p>
+
+                    The final system will generate an
+                    understandable explanation based on
+                    information retrieved from the knowledge graph.
+
+                </p>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= TECHNOLOGIES ================= -->
+
+<section>
+
+    <div class="section-header">
+
+        <h2>
+            ⚙️ Technologies
+        </h2>
+
+        <p>
+            Main technologies and resources involved in the project.
+        </p>
+
+    </div>
+
+
+    <div class="tech-grid">
+
+
+        <div class="tech-card">
+
+            <div class="tech-icon">
+                🐍
+            </div>
+
+            <h4>
+                Python
+            </h4>
+
+        </div>
+
+
+        <div class="tech-card">
+
+            <div class="tech-icon">
+                🧠
+            </div>
+
+            <h4>
+                Deep Learning
+            </h4>
+
+        </div>
+
+
+        <div class="tech-card">
+
+            <div class="tech-icon">
+                🌿
+            </div>
+
+            <h4>
+                PlantVillage
+            </h4>
+
+        </div>
+
+
+        <div class="tech-card">
+
+            <div class="tech-icon">
+                🕸️
+            </div>
+
+            <h4>
+                Neo4j
+            </h4>
+
+        </div>
+
+
+        <div class="tech-card">
+
+            <div class="tech-icon">
+                🤖
+            </div>
+
+            <h4>
+                LLM
+            </h4>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- ================= PROJECT SUMMARY ================= -->
+
+<section style="background:#ecfdf5;">
+
+    <div class="section-header">
+
+        <h2>
+            🎯 Project Summary
+        </h2>
+
+    </div>
+
+
+    <div class="about-grid">
+
+
+        <div class="card">
+
+            <h3>
+                Problem
+            </h3>
+
+            <p>
+
+                Crop diseases can negatively affect crop
+                productivity. Identifying diseases and accessing
+                relevant information can be difficult for users.
+
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Proposed Solution
+            </h3>
+
+            <p>
+
+                The proposed system combines crop disease
+                classification, knowledge graph construction
+                and Large Language Models for intelligent
+                crop disease analysis.
+
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Input
+            </h3>
+
+            <p>
+
+                Crop leaf image from the PlantVillage
+                dataset or user-provided image.
+
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Output
+            </h3>
+
+            <p>
+
+                Predicted disease, related knowledge,
+                symptoms, causes, treatment information
+                and LLM-generated explanation.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <h3>
+        🌱 Crop Disease Analysis
+    </h3>
+
+    <p>
+
+        Knowledge Graph Construction Using Large Language Models
+        for Crop Disease Analysis Using PlantVillage Dataset
+
+    </p>
+
+    <p>
+
+        Major Project | Computer Science & Engineering
+
+    </p>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+    const imageInput =
+        document.getElementById("imageInput");
+
+    const preview =
+        document.getElementById("preview");
+
+    const uploadIcon =
+        document.getElementById("uploadIcon");
+
+
+    imageInput.addEventListener(
+        "change",
+        function(event) {
+
+            const file =
+                event.target.files[0];
+
+
+            if (file) {
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload =
+                    function(e) {
+
+                        preview.src =
+                            e.target.result;
+
+                        preview.style.display =
+                            "block";
+
+                        uploadIcon.style.display =
+                            "none";
+
+                    };
+
+
+                reader.readAsDataURL(file);
+
+            }
+
+        }
+    );
+
+
+    function analyzeImage() {
+
+        const file =
+            imageInput.files[0];
+
+
+        if (!file) {
+
+            alert(
+                "Please upload a crop leaf image first."
+            );
+
+            return;
+
+        }
+
+
+        document.getElementById(
+            "emptyResult"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "resultBox"
+        ).style.display = "block";
+
+
+        document.getElementById(
+            "resultBox"
+        ).scrollIntoView({
+
+            behavior: "smooth",
+
+            block: "center"
+
+        });
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
